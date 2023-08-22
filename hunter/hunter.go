@@ -1,6 +1,7 @@
 package hunter
 
 import (
+	"errors"
 	"testdoubles/prey"
 )
 
@@ -9,3 +10,7 @@ type Hunter interface {
 	// Hunt hunts the prey
 	Hunt(prey prey.Prey) (err error)
 }
+
+var (
+	ErrCanNotHunt = errors.New("can not hunt the prey")
+)

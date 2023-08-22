@@ -1,7 +1,7 @@
 package hunter
 
 import (
-	"errors"
+	"fmt"
 	"math/rand"
 	"testdoubles/positioner"
 	"testdoubles/prey"
@@ -58,7 +58,7 @@ func (w *WhiteShark) Hunt(prey prey.Prey) (err error) {
 	
 	// check if shark can catch the prey
 	if !w.simulator.CanCatch(sharkSubject, preySubject) {
-		err = errors.New("white shark cannot catch the prey")
+		err = fmt.Errorf("%w: shark can not catch the prey", ErrCanNotHunt)
 		return
 	}
 
