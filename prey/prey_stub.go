@@ -3,7 +3,7 @@ package prey
 import "testdoubles/positioner"
 
 // NewPreyStub creates a new PreyStub
-func NewPreyStub() (prey Prey) {
+func NewPreyStub() (prey *PreyStub) {
 	prey = &PreyStub{}
 	return
 }

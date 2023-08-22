@@ -1,7 +1,7 @@
 package positioner
 
 // NewPositionerStub creates a new PositionerStub
-func NewPositionerStub() (positioner Positioner) {
+func NewPositionerStub() (positioner *PositionerStub) {
 	positioner = &PositionerStub{}
 	return
 }
