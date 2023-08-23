@@ -22,13 +22,7 @@ The command will be executed:
 - `target` file `does not exist`
 - `target` file is `not up to date` than the `dependency` file
 
-**Prefix `.PHONY`**
-The command also executed:
-- `target` file is `up to date`
-
----
-
-### Targeting specific commands for execution (not necessarily files)
+### Targeting specific commands for execution (not files)
 ```makefile
 .PHONY: clean
 clean:
