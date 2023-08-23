@@ -14,5 +14,6 @@ type PositionerStub struct {
 
 // GetLinearDistance
 func (s *PositionerStub) GetLinearDistance(from, to *Position) (linearDistance float64) {
-	return s.GetLinearDistanceFunc(from, to)
+	linearDistance = s.GetLinearDistanceFunc(from, to)
+	return
 }
