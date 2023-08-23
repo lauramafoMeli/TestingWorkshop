@@ -6,6 +6,7 @@ import "testdoubles/positioner"
 func NewCatchSimulatorDefault(maxTimeToCatch float64, ps positioner.Positioner) CatchSimulator {
 	return &CatchSimulatorDefault{
 		maxTimeToCatch: maxTimeToCatch,
+		ps:             ps,
 	}
 }
 
