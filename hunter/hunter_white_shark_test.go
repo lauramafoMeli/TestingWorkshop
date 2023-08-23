@@ -106,3 +106,37 @@ func TestHunterWhiteShark_Hunt(t *testing.T) {
 		require.Equal(t, expMockCallCanCatch, sm.Calls.CanCatch)
 	})
 }
+
+func TestHunterWhiteShark_Configure(t *testing.T) {
+	t.Run("set speed to 100", func(t *testing.T) {
+		// arrange
+		impl := &WhiteShark{speed: 0, position: nil}
+
+		// act
+		inputSpeed := 100.0
+		inputPosition := (*positioner.Position)(nil)
+		impl.Configure(inputSpeed, inputPosition)
+
+		// assert
+		outputSpeed := 100.0
+		outputPosition := (*positioner.Position)(nil)
+		require.Equal(t, outputSpeed, impl.speed)
+		require.Equal(t, outputPosition, impl.position)
+	})
+
+	t.Run("set position to (1, 2, 3)", func(t *testing.T) {
+		// arrange
+		impl := &WhiteShark{speed: 0, position: nil}
+
+		// act
+		inputSpeed := 0.0
+		inputPosition := &positioner.Position{X: 1, Y: 2, Z: 3}
+		impl.Configure(inputSpeed, inputPosition)
+
+		// assert
+		outputSpeed := 0.0
+		outputPosition := &positioner.Position{X: 1, Y: 2, Z: 3}
+		require.Equal(t, outputSpeed, impl.speed)
+		require.Equal(t, outputPosition, impl.position)
+	})
+}

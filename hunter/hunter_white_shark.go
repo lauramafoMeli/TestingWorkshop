@@ -43,6 +43,7 @@ type WhiteShark struct {
 	simulator simulator.CatchSimulator
 }
 
+// Hunt hunts the prey
 func (w *WhiteShark) Hunt(prey prey.Prey) (err error) {
 	// get the position of the prey
 	preySubject := &simulator.Subject{
@@ -63,4 +64,10 @@ func (w *WhiteShark) Hunt(prey prey.Prey) (err error) {
 	}
 
 	return
+}
+
+// Configure configures the shark
+func (w *WhiteShark) Configure(speed float64, position *positioner.Position) {
+	(*w).speed = speed
+	(*w).position = position
 }
