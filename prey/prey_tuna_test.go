@@ -57,3 +57,37 @@ func TestTuna_GetPosition(t *testing.T) {
 		require.NotNil(t, output)
 	})
 }
+
+func TestTuna_Configure(t *testing.T) {
+	t.Run("set speed to 100", func(t *testing.T) {
+		// arrange
+		impl := &Tuna{speed: 0.0, position: nil}
+
+		// act
+		inputSpeed := 100.0
+		inputPosition := (*positioner.Position)(nil)
+		impl.Configure(inputSpeed, inputPosition)
+
+		// assert
+		outputSpeed := 100.0
+		outputPosition := (*positioner.Position)(nil)
+		require.Equal(t, outputSpeed, impl.speed)
+		require.Equal(t, outputPosition, impl.position)
+	})
+
+	t.Run("set position to (100, 0, 0)", func(t *testing.T) {
+		// arrange
+		impl := &Tuna{speed: 0, position: nil}
+
+		// act
+		inputSpeed := 0.0
+		inputPosition := &positioner.Position{X: 100, Y: 0, Z: 0}
+		impl.Configure(inputSpeed, inputPosition)
+
+		// assert
+		outputSpeed := 0.0
+		outputPosition := &positioner.Position{X: 100, Y: 0, Z: 0}
+		require.Equal(t, outputSpeed, impl.speed)
+		require.Equal(t, outputPosition, impl.position)
+	})
+}

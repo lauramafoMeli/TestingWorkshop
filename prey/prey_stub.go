@@ -14,14 +14,23 @@ type PreyStub struct {
 	GetSpeedFunc func() (speed float64)
 	// GetPositionFunc externalize the GetPosition method
 	GetPositionFunc func() (position *positioner.Position)
+	// ConfigureFunc externalize the Configure method
+	ConfigureFunc func(speed float64, position *positioner.Position)
 }
 
 // GetSpeed
 func (s *PreyStub) GetSpeed() (speed float64) {
-	return s.GetSpeedFunc()
+	speed = s.GetSpeedFunc()
+	return
 }
 
 // GetPosition
 func (s *PreyStub) GetPosition() (position *positioner.Position) {
-	return s.GetPositionFunc()
+	position = s.GetPositionFunc()
+	return
+}
+
+// Configure
+func (s *PreyStub) Configure(speed float64, position *positioner.Position) {
+	s.ConfigureFunc(speed, position)
 }

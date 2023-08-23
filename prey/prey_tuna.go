@@ -6,7 +6,7 @@ import (
 )
 
 // CreateTuna creates a new Tuna
-func CreateTuna() Prey {
+func CreateTuna() *Tuna {
 	// default config
 	// -> max speed: 252 m/s
 	speed := rand.Float64() * 252.0 + 15.0
@@ -38,7 +38,14 @@ func (t *Tuna) GetSpeed() (speed float64) {
 	return
 }
 
+// GetPosition returns the position of the tuna
 func (t *Tuna) GetPosition() (position *positioner.Position) {
 	position = t.position
 	return
+}
+
+// Configure configures the tuna
+func (t *Tuna) Configure(speed float64, position *positioner.Position) {
+	(*t).speed = speed
+	(*t).position = position
 }

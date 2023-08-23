@@ -8,4 +8,7 @@ type Prey interface {
 	GetSpeed() (speed float64)
 	// GetPosition returns the position of the prey
 	GetPosition() (position *positioner.Position)
+
+	// Configure
+	Configure(speed float64, position *positioner.Position)
 }
