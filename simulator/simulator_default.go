@@ -3,12 +3,19 @@ package simulator
 import "testdoubles/positioner"
 
 // NewCatchSimulatorDefault creates a new CatchSimulatorDefault
-func NewCatchSimulatorDefault(maxTimeToCatch float64, ps positioner.Positioner) CatchSimulator {
-	return &CatchSimulatorDefault{
-		maxTimeToCatch: maxTimeToCatch,
-		ps:             ps,
-	}
+type ConfigCatchSimulatorDefault struct {
+	MaxTimeToCatch float64
+	Positioner     positioner.Positioner
 }
+
+func NewCatchSimulatorDefault(cfg *ConfigCatchSimulatorDefault) (sm *CatchSimulatorDefault) {
+	sm = &CatchSimulatorDefault{
+		maxTimeToCatch: cfg.MaxTimeToCatch,
+		ps:             cfg.Positioner,
+	}
+	return
+}
+
 
 // CatchSimulatorDefault is a default implementation of CatchSimulator
 type CatchSimulatorDefault struct {

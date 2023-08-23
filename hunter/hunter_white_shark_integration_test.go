@@ -19,7 +19,8 @@ func TestIntegration_WhiteShark_Hunt(t *testing.T) {
 			return
 		}
 
-		sm := simulator.NewCatchSimulatorDefault(100, ps)
+		cfgSm := &simulator.ConfigCatchSimulatorDefault{MaxTimeToCatch: 100, Positioner: ps}
+		sm := simulator.NewCatchSimulatorDefault(cfgSm)
 
 		impl := &WhiteShark{
 			speed:     10,
@@ -49,7 +50,8 @@ func TestIntegration_WhiteShark_Hunt(t *testing.T) {
 			return
 		}
 
-		sm := simulator.NewCatchSimulatorDefault(1, ps)
+		cfgSm := &simulator.ConfigCatchSimulatorDefault{MaxTimeToCatch: 1, Positioner: ps}
+		sm := simulator.NewCatchSimulatorDefault(cfgSm)
 
 		impl := &WhiteShark{
 			speed:     10,
@@ -81,7 +83,8 @@ func TestIntegration_WhiteShark_Hunt(t *testing.T) {
 			return
 		}
 
-		sm := simulator.NewCatchSimulatorDefault(100, ps)
+		cfgSm := &simulator.ConfigCatchSimulatorDefault{MaxTimeToCatch: 100, Positioner: ps}
+		sm := simulator.NewCatchSimulatorDefault(cfgSm)
 
 		impl := &WhiteShark{
 			speed:     5,

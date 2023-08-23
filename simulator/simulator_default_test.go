@@ -17,7 +17,8 @@ func TestCatchSimulatorDefault_CanCatch(t *testing.T) {
 			return
 		}
 
-		impl := NewCatchSimulatorDefault(100, ps)
+		cfgImpl := &ConfigCatchSimulatorDefault{MaxTimeToCatch: 100, Positioner: ps}
+		impl := NewCatchSimulatorDefault(cfgImpl)
 
 		// act
 		inputHunter := &Subject{Speed: 10, Position: &positioner.Position{X: 0, Y: 0, Z: 0}}
@@ -37,7 +38,8 @@ func TestCatchSimulatorDefault_CanCatch(t *testing.T) {
 			return
 		}
 
-		impl := NewCatchSimulatorDefault(100, ps)
+		cfgImpl := &ConfigCatchSimulatorDefault{MaxTimeToCatch: 100, Positioner: ps}
+		impl := NewCatchSimulatorDefault(cfgImpl)
 
 		// act
 		inputHunter := &Subject{Speed: 10, Position: &positioner.Position{X: 0, Y: 0, Z: 0}}
@@ -57,7 +59,8 @@ func TestCatchSimulatorDefault_CanCatch(t *testing.T) {
 			return
 		}
 
-		impl := NewCatchSimulatorDefault(100, ps)
+		cfgImpl := &ConfigCatchSimulatorDefault{MaxTimeToCatch: 100, Positioner: ps}
+		impl := NewCatchSimulatorDefault(cfgImpl)
 
 		// act
 		inputHunter := &Subject{Speed: 5, Position: &positioner.Position{X: 0, Y: 0, Z: 0}}
