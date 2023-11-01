@@ -3,16 +3,16 @@ package hunt
 // NewTuna creates a new Tuna
 func NewTuna(name string, speed float64) (t *Tuna) {
 	t = &Tuna{
-		name:  name,
-		speed: speed,
+		Name:  name,
+		Speed: speed,
 	}
 	return
 }
 
 // Tuna is a type of prey
 type Tuna struct {
-	// name of the tuna
-	name string
-	// speed of the tuna
-	speed float64
+	// Name of the tuna
+	Name string
+	// Speed of the tuna
+	Speed float64
 }

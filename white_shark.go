@@ -16,40 +16,40 @@ var (
 // NewWhiteShark creates a new WhiteShark
 func NewWhiteShark(hungry bool, tired bool, speed float64) (w *WhiteShark) {
 	w = &WhiteShark{
-		hungry: hungry,
-		tired:  tired,
-		speed:  speed,
+		Hungry: hungry,
+		Tired:  tired,
+		Speed:  speed,
 	}
 	return
 }
 
 // WhiteShark is an implementation of the Hunter interface
 type WhiteShark struct {
-	// hungry indicates if the shark is hungry
-	hungry bool
-	// tired indicates if the shark is tired
-	tired bool
-	// speed indicates the speed of the shark
-	speed float64
+	// Hungry indicates if the shark is hungry
+	Hungry bool
+	// Tired indicates if the shark is tired
+	Tired bool
+	// Speed indicates the speed of the shark
+	Speed float64
 }
 
 func (w *WhiteShark) Hunt(tuna *Tuna) (err error) {
 	// check if the shark can hunt
-	if !w.hungry {
+	if !w.Hungry {
 		err = ErrSharkIsNotHungry
 		return
 	}
-	if w.tired {
+	if w.Tired {
 		err = ErrSharkIsTired
 		return
 	}
-	if w.speed < tuna.speed {
+	if w.Speed < tuna.Speed {
 		err = ErrSharkIsSlower
 		return
 	}
 
 	// hunt done
-	w.hungry = false
-	w.tired = true
+	w.Hungry = false
+	w.Tired = true
 	return
 }
