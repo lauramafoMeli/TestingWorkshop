@@ -33,6 +33,16 @@ func CreateWhiteShark(simulator simulator.CatchSimulator) (h Hunter) {
 	return
 }
 
+// NewWhiteShark creates a new WhiteShark
+func NewWhiteShark(speed float64, position *positioner.Position, simulator simulator.CatchSimulator) (h Hunter) {
+	h = &WhiteShark{
+		speed:     speed,
+		position:  position,
+		simulator: simulator,
+	}
+	return
+}
+
 // WhiteShark is an implementation of the Hunter interface
 type WhiteShark struct {
 	// speed in m/s

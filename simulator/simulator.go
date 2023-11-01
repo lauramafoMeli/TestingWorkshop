@@ -2,6 +2,7 @@ package simulator
 
 import "testdoubles/positioner"
 
+// Subject is a struct that represents a subject
 type Subject struct {
 	// position of the subject
 	Position *positioner.Position

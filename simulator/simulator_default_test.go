@@ -1,7 +1,8 @@
-package simulator
+package simulator_test
 
 import (
 	"testdoubles/positioner"
+	"testdoubles/simulator"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -17,11 +18,11 @@ func TestCatchSimulatorDefault_CanCatch(t *testing.T) {
 			return
 		}
 
-		impl := NewCatchSimulatorDefault(100, ps)
+		impl := simulator.NewCatchSimulatorDefault(100, ps)
 
 		// act
-		inputHunter := &Subject{Speed: 10, Position: &positioner.Position{X: 0, Y: 0, Z: 0}}
-		inputPrey := &Subject{Speed: 5, Position: &positioner.Position{X: 100, Y: 0, Z: 0}}
+		inputHunter := &simulator.Subject{Speed: 10, Position: &positioner.Position{X: 0, Y: 0, Z: 0}}
+		inputPrey := &simulator.Subject{Speed: 5, Position: &positioner.Position{X: 100, Y: 0, Z: 0}}
 		output := impl.CanCatch(inputHunter, inputPrey)
 
 		// assert
@@ -37,11 +38,11 @@ func TestCatchSimulatorDefault_CanCatch(t *testing.T) {
 			return
 		}
 
-		impl := NewCatchSimulatorDefault(100, ps)
+		impl := simulator.NewCatchSimulatorDefault(100, ps)
 
 		// act
-		inputHunter := &Subject{Speed: 10, Position: &positioner.Position{X: 0, Y: 0, Z: 0}}
-		inputPrey := &Subject{Speed: 5, Position: &positioner.Position{X: 100, Y: 0, Z: 0}}
+		inputHunter := &simulator.Subject{Speed: 10, Position: &positioner.Position{X: 0, Y: 0, Z: 0}}
+		inputPrey := &simulator.Subject{Speed: 5, Position: &positioner.Position{X: 100, Y: 0, Z: 0}}
 		output := impl.CanCatch(inputHunter, inputPrey)
 
 		// assert
@@ -57,11 +58,11 @@ func TestCatchSimulatorDefault_CanCatch(t *testing.T) {
 			return
 		}
 
-		impl := NewCatchSimulatorDefault(100, ps)
+		impl := simulator.NewCatchSimulatorDefault(100, ps)
 
 		// act
-		inputHunter := &Subject{Speed: 5, Position: &positioner.Position{X: 0, Y: 0, Z: 0}}
-		inputPrey := &Subject{Speed: 10, Position: &positioner.Position{X: 100, Y: 0, Z: 0}}
+		inputHunter := &simulator.Subject{Speed: 5, Position: &positioner.Position{X: 0, Y: 0, Z: 0}}
+		inputPrey := &simulator.Subject{Speed: 10, Position: &positioner.Position{X: 100, Y: 0, Z: 0}}
 		output := impl.CanCatch(inputHunter, inputPrey)
 
 		// assert
