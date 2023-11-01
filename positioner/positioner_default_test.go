@@ -1,6 +1,7 @@
-package positioner
+package positioner_test
 
 import (
+	"testdoubles/positioner"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -8,7 +9,7 @@ import (
 
 // Tests for PositionerDefault
 func TestPositionerDefault_GetLinearDistance(t *testing.T) {
-	type input struct { from, to *Position }
+	type input struct { from, to *positioner.Position }
 	type output struct { linearDistance float64 }
 	type testCase struct {
 		name string
@@ -21,8 +22,8 @@ func TestPositionerDefault_GetLinearDistance(t *testing.T) {
 		{
 			name: "all coordinates are 0",
 			input: input{
-				from: &Position{ X: 0, Y: 0, Z: 0 },
-				to: &Position{ X: 0, Y: 0, Z: 0 },
+				from: &positioner.Position{ X: 0, Y: 0, Z: 0 },
+				to: &positioner.Position{ X: 0, Y: 0, Z: 0 },
 			},
 			output: output{
 				linearDistance: 0,
@@ -33,8 +34,8 @@ func TestPositionerDefault_GetLinearDistance(t *testing.T) {
 		{
 			name: "all coordinates are 1",
 			input: input{
-				from: &Position{ X: 1, Y: 1, Z: 1 },
-				to: &Position{ X: 1, Y: 1, Z: 1 },
+				from: &positioner.Position{ X: 1, Y: 1, Z: 1 },
+				to: &positioner.Position{ X: 1, Y: 1, Z: 1 },
 			},
 			output: output{
 				linearDistance: 0,
@@ -45,8 +46,8 @@ func TestPositionerDefault_GetLinearDistance(t *testing.T) {
 		{
 			name: "radicand is a perfect square",
 			input: input{
-				from: &Position{ X: 0, Y: 0, Z: 6 },
-				to: &Position{ X: 0, Y: 0, Z: 3 },
+				from: &positioner.Position{ X: 0, Y: 0, Z: 6 },
+				to: &positioner.Position{ X: 0, Y: 0, Z: 3 },
 			},
 			output: output{
 				linearDistance: 3,
@@ -57,8 +58,8 @@ func TestPositionerDefault_GetLinearDistance(t *testing.T) {
 		{
 			name: "all negative coordinates",
 			input: input{
-				from: &Position{ X: -1, Y: -1, Z: -1 },
-				to: &Position{ X: -1, Y: -1, Z: -1 },
+				from: &positioner.Position{ X: -1, Y: -1, Z: -1 },
+				to: &positioner.Position{ X: -1, Y: -1, Z: -1 },
 			},
 			output: output{
 				linearDistance: 0,
@@ -70,7 +71,7 @@ func TestPositionerDefault_GetLinearDistance(t *testing.T) {
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
 			// arrange
-			impl := NewPositionerDefault()
+			impl := positioner.NewPositionerDefault()
 
 			// act
 			linearDistance := impl.GetLinearDistance(c.input.from, c.input.to)
