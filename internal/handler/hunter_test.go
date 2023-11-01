@@ -146,7 +146,7 @@ func TestHandlerHuntHandler(t *testing.T) {
 
 		// assert
 		expectedCode := http.StatusOK
-		expectedBody := `{"message":"prey hunted","data":{"duration":100}}`
+		expectedBody := `{"message":"hunt done","data":{"success":true,"duration":100.0}}`
 		expectedHeaders := http.Header{"Content-Type": []string{"application/json"}}
 		expectedCallHunt := 1
 		require.Equal(t, expectedCode, response.Code)
@@ -172,12 +172,8 @@ func TestHandlerHuntHandler(t *testing.T) {
 		hdFunc(response, request)
 
 		// assert
-		expectedCode := http.StatusInternalServerError
-		expectedBody := fmt.Sprintf(
-			`{"status":"%s","message":"%s"}`,
-			http.StatusText(expectedCode),
-			"can not hunt the prey",
-		)
+		expectedCode := http.StatusOK
+		expectedBody := `{"message":"hunt done","data":{"success":false,"duration":0.0}}`
 		expectedHeaders := http.Header{"Content-Type": []string{"application/json"}}
 		expectedCallHunt := 1
 		require.Equal(t, expectedCode, response.Code)

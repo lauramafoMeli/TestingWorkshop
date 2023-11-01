@@ -93,19 +93,18 @@ func (h *Hunter) Hunt() http.HandlerFunc {
 		// - hunt
 		duration, err := h.ht.Hunt(h.pr)
 		if err != nil {
-			switch {
-			case errors.Is(err, hunter.ErrCanNotHunt):
-				response.Error(w, http.StatusInternalServerError, "can not hunt the prey")
-			default:
+			if !errors.Is(err, hunter.ErrCanNotHunt) {
 				response.Error(w, http.StatusInternalServerError, "internal server error")
+				return
 			}
-			return
 		}
+		ok := err == nil
 
 		// response
 		response.JSON(w, http.StatusOK, map[string]any{
-			"message": "prey hunted",
+			"message": "hunt done",
 			"data": map[string]any{
+				"success": ok,
 				"duration": duration,
 			},
 		})

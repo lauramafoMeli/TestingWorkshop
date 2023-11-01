@@ -50,7 +50,7 @@ func TestCatchSimulatorDefault_CanCatch(t *testing.T) {
 		duration, ok := impl.CanCatch(inputHunter, inputPrey)
 
 		// assert
-		expectedDuration := 200.0
+		expectedDuration := 0.0
 		expectedOk := false
 		require.Equal(t, expectedDuration, duration)
 		require.Equal(t, expectedOk, ok)
@@ -74,7 +74,7 @@ func TestCatchSimulatorDefault_CanCatch(t *testing.T) {
 		duration, ok := impl.CanCatch(inputHunter, inputPrey)
 
 		// assert
-		expectedDuration := -20.0
+		expectedDuration := 0.0
 		expectedOk := false
 		require.Equal(t, expectedDuration, duration)
 		require.Equal(t, expectedOk, ok)

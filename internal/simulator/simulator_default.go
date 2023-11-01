@@ -31,9 +31,14 @@ func (c *CatchSimulatorDefault) CanCatch(hunter, prey *Subject) (duration float6
 	distance := c.ps.GetLinearDistance(hunter.Position, prey.Position)
 
 	// calculate time to catch the prey (in seconds)
-	duration = distance / (hunter.Speed - prey.Speed)
+	timeToCatch := distance / (hunter.Speed - prey.Speed)
 
 	// check if hunter can catch the prey
-	ok = duration >= 0 && duration <= c.maxTimeToCatch
+	ok = timeToCatch >= 0 && timeToCatch <= c.maxTimeToCatch
+	if !ok {
+		return
+	}
+
+	duration = timeToCatch
 	return
 }

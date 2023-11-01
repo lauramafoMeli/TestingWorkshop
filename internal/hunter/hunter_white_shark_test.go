@@ -58,7 +58,7 @@ func TestHunterWhiteShark_Hunt(t *testing.T) {
 		// - simulator: mock
 		sm := simulator.NewCatchSimulatorMock()
 		sm.CanCatchFunc = func(hunter, prey *simulator.Subject) (duration float64, ok bool) {
-			return -20.0, false
+			return 0.0, false
 		}
 		// - hunter: white shark
 		impl := hunter.NewWhiteShark(hunter.ConfigWhiteShark{
@@ -72,7 +72,7 @@ func TestHunterWhiteShark_Hunt(t *testing.T) {
 
 		// assert
 		expectedErr := hunter.ErrCanNotHunt; expectedErrMsg := "can not hunt the prey: shark can not catch the prey"
-		expectedDuration := -20.0
+		expectedDuration := 0.0
 		expectedMockCallCanCatch := 1
 		require.ErrorIs(t, err, expectedErr)
 		require.EqualError(t, err, expectedErrMsg)
@@ -93,7 +93,7 @@ func TestHunterWhiteShark_Hunt(t *testing.T) {
 		// - simulator: mock
 		sm := simulator.NewCatchSimulatorMock()
 		sm.CanCatchFunc = func(hunter, prey *simulator.Subject) (duration float64, ok bool) {
-			return 200.0, false
+			return 0.0, false
 		}
 		// - hunter: white shark
 		impl := hunter.NewWhiteShark(hunter.ConfigWhiteShark{
@@ -107,7 +107,7 @@ func TestHunterWhiteShark_Hunt(t *testing.T) {
 
 		// assert
 		expectedErr := hunter.ErrCanNotHunt; expErrMsg := "can not hunt the prey: shark can not catch the prey"
-		expectedDuration := 200.0
+		expectedDuration := 0.0
 		expectedMockCallCanCatch := 1
 		require.ErrorIs(t, err, expectedErr)
 		require.EqualError(t, err, expErrMsg)
