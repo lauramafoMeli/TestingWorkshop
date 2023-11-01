@@ -1,4 +1,4 @@
-package hunt
+package hunt_test
 
 import "testing"
 
