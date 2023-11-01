@@ -24,11 +24,13 @@ func TestCatchSimulatorDefault_CanCatch(t *testing.T) {
 		// act
 		inputHunter := &simulator.Subject{Speed: 10, Position: &positioner.Position{X: 0, Y: 0, Z: 0}}
 		inputPrey := &simulator.Subject{Speed: 5, Position: &positioner.Position{X: 100, Y: 0, Z: 0}}
-		output := impl.CanCatch(inputHunter, inputPrey)
+		duration, ok := impl.CanCatch(inputHunter, inputPrey)
 
 		// assert
-		outputOk := true
-		require.Equal(t, outputOk, output)
+		expectedDuration := 20.0
+		expectedOk := true		
+		require.Equal(t, expectedDuration, duration)
+		require.Equal(t, expectedOk, ok)
 	})
 	
 	t.Run("Hunter can not catch the prey - hunter faster but long distance", func(t *testing.T) {
@@ -44,12 +46,15 @@ func TestCatchSimulatorDefault_CanCatch(t *testing.T) {
 
 		// act
 		inputHunter := &simulator.Subject{Speed: 10, Position: &positioner.Position{X: 0, Y: 0, Z: 0}}
-		inputPrey := &simulator.Subject{Speed: 5, Position: &positioner.Position{X: 100, Y: 0, Z: 0}}
-		output := impl.CanCatch(inputHunter, inputPrey)
+		inputPrey := &simulator.Subject{Speed: 5, Position: &positioner.Position{X: 1000, Y: 0, Z: 0}}
+		duration, ok := impl.CanCatch(inputHunter, inputPrey)
 
 		// assert
-		outputOk := false
-		require.Equal(t, outputOk, output)
+		expectedDuration := 200.0
+		expectedOk := false
+		require.Equal(t, expectedDuration, duration)
+		require.Equal(t, expectedOk, ok)
+
 	})
 
 	t.Run("Hunter can not catch the prey - hunter slower", func(t *testing.T) {
@@ -66,10 +71,12 @@ func TestCatchSimulatorDefault_CanCatch(t *testing.T) {
 		// act
 		inputHunter := &simulator.Subject{Speed: 5, Position: &positioner.Position{X: 0, Y: 0, Z: 0}}
 		inputPrey := &simulator.Subject{Speed: 10, Position: &positioner.Position{X: 100, Y: 0, Z: 0}}
-		output := impl.CanCatch(inputHunter, inputPrey)
+		duration, ok := impl.CanCatch(inputHunter, inputPrey)
 
 		// assert
-		outputOk := false
-		require.Equal(t, outputOk, output)
+		expectedDuration := -20.0
+		expectedOk := false
+		require.Equal(t, expectedDuration, duration)
+		require.Equal(t, expectedOk, ok)
 	})
 }

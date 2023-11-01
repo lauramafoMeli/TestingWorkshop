@@ -9,7 +9,7 @@ func NewCatchSimulatorMock() (simulator *CatchSimulatorMock) {
 // CatchSimulatorMock is a mock for CatchSimulator
 type CatchSimulatorMock struct {
 	// CanCatchFunc externalize the CanCatch method
-	CanCatchFunc func(hunter, prey *Subject) (canCatch bool)
+	CanCatchFunc func(hunter, prey *Subject) (duration float64, ok bool)
 
 	// Observer
 	Calls struct {
@@ -19,7 +19,7 @@ type CatchSimulatorMock struct {
 }
 
 // CanCatch
-func (m *CatchSimulatorMock) CanCatch(hunter, prey *Subject) (canCatch bool) {
+func (m *CatchSimulatorMock) CanCatch(hunter, prey *Subject) (duration float64, ok bool) {
 	// Update the observer
 	m.Calls.CanCatch++
 	

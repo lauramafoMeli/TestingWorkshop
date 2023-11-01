@@ -14,313 +14,205 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// Tests for Hunter ConfigurePrey handler.
-func TestHunterConfigurePreyHandler(t *testing.T) {
-	type arrange struct {
-		mockPrey   func() *prey.PreyStub
-	}
-	type input struct {
-		request  func() *http.Request
-		response *httptest.ResponseRecorder
-	}
-	type output struct {
-		code    int
-		body    string
-		headers http.Header
-	}
-	type testCase struct {
-		name	string
-		arrange	arrange
-		input	input
-		output	output
-	}
+// Tests for Hunter ConfigurePrey handler
+func TestHandlerConfigurePreyHandler(t *testing.T) {
+	t.Run("case 1: success to configure prey", func(t *testing.T) {
+		// arrange
+		// - prey: stub
+		pr := prey.NewPreyStub()
+		// - handler
+		hd := handler.NewHunter(nil, pr)
+		hdFunc := hd.ConfigurePrey()
 
-	testCases := []testCase{
-		// case 1: success to configure the prey
-		{
-			name: "case 1: success to configure the prey",
-			arrange: arrange{
-				mockPrey: func() *prey.PreyStub {
-					return prey.NewPreyStub()
-				},
-			},
-			input: input{
-				request: func() *http.Request {
-					r := httptest.NewRequest(http.MethodPost, "/prey", 
-						strings.NewReader(`{"speed":10.0,"position":{"X": 1.0,"Y": 2.0,"Z": 3.0}}`),
-					)
-					r.Header.Set("Content-Type", "application/json")
-					return r
-				},
-				response: httptest.NewRecorder(),
-			},
-			output: output{
-				code: http.StatusOK,
-				body: `{"message":"prey configured","data":null}`,
-				headers: http.Header{"Content-Type": []string{"application/json"}},
-			},
-		},
-		// case 2: invalid request body
-		{
-			name: "case 2: invalid request body",
-			arrange: arrange{
-				mockPrey: func() *prey.PreyStub {return nil},
-			},
-			input: input{
-				request: func() *http.Request {
-					r := httptest.NewRequest(http.MethodPost, "/prey",
-						strings.NewReader(`{"speed":"invalid","position":{"X": 1.0,"Y": 2.0}}`),
-					)
-					r.Header.Set("Content-Type", "application/json")
-					return r
-				},
-				response: httptest.NewRecorder(),
-			},
-			output: output{
-				code: http.StatusBadRequest,
-				body: fmt.Sprintf(
-					`{"status":"%s","message":"%s"}`,
-					http.StatusText(http.StatusBadRequest),
-					"invalid request body",
-				),
-				headers: http.Header{"Content-Type": []string{"application/json"}},
-			},
-		},
-	}
+		// act
+		request := httptest.NewRequest("POST", "/", strings.NewReader(
+			`{"speed": 10.0, "position": {"X": 0.0, "Y": 0.0, "Z": 0.0}}`,
+		))
+		request.Header.Set("Content-Type", "application/json")
+		response := httptest.NewRecorder()
+		hdFunc(response, request)
 
-	// run test cases
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			// arrange
-			// - prey: mock
-			mockPrey := tc.arrange.mockPrey()
-			// - handler
-			hd := handler.NewHunter(nil, mockPrey)
-			hdFunc := hd.ConfigurePrey()
+		// assert
+		expectedCode := http.StatusOK
+		expectedBody := `{"message":"prey configured","data":null}`
+		expectedHeaders := http.Header{"Content-Type": []string{"application/json"}}
+		require.Equal(t, expectedCode, response.Code)
+		require.JSONEq(t, expectedBody, response.Body.String())
+		require.Equal(t, expectedHeaders, response.Header())
+	})
 
-			// act
-			hdFunc(tc.input.response, tc.input.request())
+	t.Run("case 2: fail to configure prey - invalid request body", func(t *testing.T) {
+		// arrange
+		// - handler
+		hd := handler.NewHunter(nil, nil)
+		hdFunc := hd.ConfigurePrey()
 
-			// assert
-			require.Equal(t, tc.output.code, tc.input.response.Code)
-			require.JSONEq(t, tc.output.body, tc.input.response.Body.String())
-			require.Equal(t, tc.output.headers, tc.input.response.Header())
-		})
-	}
+		// act
+		request := httptest.NewRequest("POST", "/", strings.NewReader(
+			`invalid request body`,
+		))
+		request.Header.Set("Content-Type", "application/json")
+		response := httptest.NewRecorder()
+		hdFunc(response, request)
+
+		// assert
+		expectedCode := http.StatusBadRequest
+		expectedBody := fmt.Sprintf(
+			`{"status":"%s","message":"%s"}`,
+			http.StatusText(expectedCode),
+			"invalid request body",
+		)
+		expectedHeaders := http.Header{"Content-Type": []string{"application/json"}}
+		require.Equal(t, expectedCode, response.Code)
+		require.JSONEq(t, expectedBody, response.Body.String())
+		require.Equal(t, expectedHeaders, response.Header())
+	})
 }
 
-// Tests for Hunter ConfigureHunter handler.
-func TestHunterConfigureHunterHandler(t *testing.T) {
-	type arrange struct {
-		mockHunter func() *hunter.HunterMock
-	}
-	type input struct {
-		request  func() *http.Request
-		response *httptest.ResponseRecorder
-	}
-	type output struct {
-		code    int
-		body    string
-		headers http.Header
-	}
-	type testCase struct {
-		name	string
-		arrange	arrange
-		input	input
-		output	output
-	}
+// Tests for Hunter ConfigureHunter handler
+func TestHandlerConfigureHunterHandler(t *testing.T) {
+	t.Run("case 1: success to configure hunter", func(t *testing.T) {
+		// arrange
+		// - hunter: mock
+		ht := hunter.NewHunterMock()
+		// - handler
+		hd := handler.NewHunter(ht, nil)
+		hdFunc := hd.ConfigureHunter()
 
-	testCases := []testCase{
-		// case 1: success to configure hunter
-		{
-			name: "case 1: success to configure hunter",
-			arrange: arrange{
-				mockHunter: func() *hunter.HunterMock {
-					return hunter.NewHunterMock()
-				},
-			},
-			input: input{
-				request: func() *http.Request {
-					r := httptest.NewRequest(http.MethodPost, "/hunter", 
-						strings.NewReader(`{"speed":10.0,"position":{"X": 1.0,"Y": 2.0,"Z": 3.0}}`),
-					)
-					r.Header.Set("Content-Type", "application/json")
-					return r
-				},
-				response: httptest.NewRecorder(),
-			},
-			output: output{
-				code: http.StatusOK,
-				body: `{"message":"hunter configured","data":null}`,
-				headers: http.Header{"Content-Type": []string{"application/json"}},
-			},
-		},
-		// case 2: invalid request body
-		{
-			name: "case 2: invalid request body",
-			arrange: arrange{
-				mockHunter: func() *hunter.HunterMock {return nil},
-			},
-			input: input{
-				request: func() *http.Request {
-					r := httptest.NewRequest(http.MethodPost, "/hunter",
-						strings.NewReader(`{"speed":"invalid","position":{"X": 1.0,"Y": 2.0}}`),
-					)
-					r.Header.Set("Content-Type", "application/json")
-					return r
-				},
-				response: httptest.NewRecorder(),
-			},
-			output: output{
-				code: http.StatusBadRequest,
-				body: fmt.Sprintf(
-					`{"status":"%s","message":"%s"}`,
-					http.StatusText(http.StatusBadRequest),
-					"invalid request body",
-				),
-				headers: http.Header{"Content-Type": []string{"application/json"}},
-			},
-		},
-	}
+		// act
+		request := httptest.NewRequest("POST", "/", strings.NewReader(
+			`{"speed": 10.0, "position": {"X": 0.0, "Y": 0.0, "Z": 0.0}}`,
+		))
+		request.Header.Set("Content-Type", "application/json")
+		response := httptest.NewRecorder()
+		hdFunc(response, request)
 
-	// run test cases
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			// arrange
-			// - hunter: mock
-			mockHunter := tc.arrange.mockHunter()
-			// - handler
-			hd := handler.NewHunter(mockHunter, nil)
-			hdFunc := hd.ConfigureHunter()
+		// assert
+		expectedCode := http.StatusOK
+		expectedBody := `{"message":"hunter configured","data":null}`
+		expectedHeaders := http.Header{"Content-Type": []string{"application/json"}}
+		expectedCallConfigure := 1
+		require.Equal(t, expectedCode, response.Code)
+		require.JSONEq(t, expectedBody, response.Body.String())
+		require.Equal(t, expectedHeaders, response.Header())
+		require.Equal(t, expectedCallConfigure, ht.Calls.Configure)
+	})
 
-			// act
-			hdFunc(tc.input.response, tc.input.request())
+	t.Run("case 2: fail to configure hunter - invalid request body", func(t *testing.T) {
+		// arrange
+		// - handler
+		hd := handler.NewHunter(nil, nil)
+		hdFunc := hd.ConfigureHunter()
 
-			// assert
-			require.Equal(t, tc.output.code, tc.input.response.Code)
-			require.JSONEq(t, tc.output.body, tc.input.response.Body.String())
-			require.Equal(t, tc.output.headers, tc.input.response.Header())
-		})
-	}
+		// act
+		request := httptest.NewRequest("POST", "/", strings.NewReader(
+			`invalid request body`,
+		))
+		request.Header.Set("Content-Type", "application/json")
+		response := httptest.NewRecorder()
+		hdFunc(response, request)
+
+		// assert
+		expectedCode := http.StatusBadRequest
+		expectedBody := fmt.Sprintf(
+			`{"status":"%s","message":"%s"}`,
+			http.StatusText(expectedCode),
+			"invalid request body",
+		)
+		expectedHeaders := http.Header{"Content-Type": []string{"application/json"}}
+		require.Equal(t, expectedCode, response.Code)
+		require.JSONEq(t, expectedBody, response.Body.String())
+		require.Equal(t, expectedHeaders, response.Header())
+	})
 }
 
-// Tests for Hunter Hunt handler.
-func TestHunterHuntHandler(t *testing.T) {
-	type arrange struct {
-		mockHunter func() *hunter.HunterMock
-	}
-	type input struct {
-		request  func() *http.Request
-		response *httptest.ResponseRecorder
-	}
-	type output struct {
-		code    int
-		body    string
-		headers http.Header
-	}
-	type testCase struct {
-		name	string
-		arrange	arrange
-		input	input
-		output	output
-	}
+// Tests for Hunter Hunt handler
+func TestHandlerHuntHandler(t *testing.T) {
+	t.Run("case 1: success to hunt", func(t *testing.T) {
+		// arrange
+		// - hunter: mock
+		ht := hunter.NewHunterMock()
+		ht.HuntFunc = func(pr prey.Prey) (duration float64, err error) {
+			return 100.0, nil
+		}
+		// - handler
+		hd := handler.NewHunter(ht, nil)
+		hdFunc := hd.Hunt()
 
-	testCases := []testCase{
-		// case 1: success to hunt the prey
-		{
-			name: "case 1: success to hunt the prey",
-			arrange: arrange{
-				mockHunter: func() *hunter.HunterMock {
-					return hunter.NewHunterMock()
-				},
-			},
-			input: input{
-				request: func() *http.Request {
-					return httptest.NewRequest(http.MethodPost, "/hunt", nil)
-				},
-				response: httptest.NewRecorder(),
-			},
-			output: output{
-				code: http.StatusOK,
-				body: `{"message":"prey hunted","data":null}`,
-				headers: http.Header{"Content-Type": []string{"application/json"}},
-			},
-		},
-		// case 2: hunter can not hunt the prey
-		{
-			name: "case 2: hunter can not hunt the prey",
-			arrange: arrange{
-				mockHunter: func() *hunter.HunterMock {
-					mk := hunter.NewHunterMock()
-					mk.HuntFunc = func(pr prey.Prey) error {
-						return hunter.ErrCanNotHunt
-					}
-					return mk
-				},
-			},
-			input: input{
-				request: func() *http.Request {
-					return httptest.NewRequest(http.MethodPost, "/hunt", nil)
-				},
-				response: httptest.NewRecorder(),
-			},
-			output: output{
-				code: http.StatusInternalServerError,
-				body: fmt.Sprintf(
-					`{"status":"%s","message":"%s"}`,
-					http.StatusText(http.StatusInternalServerError),
-					"can not hunt the prey",
-				),
-				headers: http.Header{"Content-Type": []string{"application/json"}},
-			},
-		},
-		// case 3: internal server error
-		{
-			name: "case 3: internal server error",
-			arrange: arrange{
-				mockHunter: func() *hunter.HunterMock {
-					mk := hunter.NewHunterMock()
-					mk.HuntFunc = func(pr prey.Prey) error {
-						return errors.New("internal error")
-					}
-					return mk
-				},
-			},
-			input: input{
-				request: func() *http.Request {
-					return httptest.NewRequest(http.MethodPost, "/hunt", nil)
-				},
-				response: httptest.NewRecorder(),
-			},
-			output: output{
-				code: http.StatusInternalServerError,
-				body: fmt.Sprintf(
-					`{"status":"%s","message":"%s"}`,
-					http.StatusText(http.StatusInternalServerError),
-					"internal server error",
-				),
-				headers: http.Header{"Content-Type": []string{"application/json"}},
-			},
-		},
-	}
+		// act
+		request := httptest.NewRequest("POST", "/", nil)
+		response := httptest.NewRecorder()
+		hdFunc(response, request)
 
-	// run test cases
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			// arrange
-			// - hunter: mock
-			mockHunter := tc.arrange.mockHunter()
-			// - handler
-			hd := handler.NewHunter(mockHunter, nil)
-			hdFunc := hd.Hunt()
+		// assert
+		expectedCode := http.StatusOK
+		expectedBody := `{"message":"prey hunted","data":{"duration":100}}`
+		expectedHeaders := http.Header{"Content-Type": []string{"application/json"}}
+		expectedCallHunt := 1
+		require.Equal(t, expectedCode, response.Code)
+		require.JSONEq(t, expectedBody, response.Body.String())
+		require.Equal(t, expectedHeaders, response.Header())
+		require.Equal(t, expectedCallHunt, ht.Calls.Hunt)
+	})
 
-			// act
-			hdFunc(tc.input.response, tc.input.request())
+	t.Run("case 2: fail to hunt - can not hunt the prey", func(t *testing.T) {
+		// arrange
+		// - hunter: mock
+		ht := hunter.NewHunterMock()
+		ht.HuntFunc = func(pr prey.Prey) (duration float64, err error) {
+			return 0.0, hunter.ErrCanNotHunt
+		}
+		// - handler
+		hd := handler.NewHunter(ht, nil)
+		hdFunc := hd.Hunt()
 
-			// assert
-			require.Equal(t, tc.output.code, tc.input.response.Code)
-			require.JSONEq(t, tc.output.body, tc.input.response.Body.String())
-			require.Equal(t, tc.output.headers, tc.input.response.Header())
-		})
-	}
+		// act
+		request := httptest.NewRequest("POST", "/", nil)
+		response := httptest.NewRecorder()
+		hdFunc(response, request)
+
+		// assert
+		expectedCode := http.StatusInternalServerError
+		expectedBody := fmt.Sprintf(
+			`{"status":"%s","message":"%s"}`,
+			http.StatusText(expectedCode),
+			"can not hunt the prey",
+		)
+		expectedHeaders := http.Header{"Content-Type": []string{"application/json"}}
+		expectedCallHunt := 1
+		require.Equal(t, expectedCode, response.Code)
+		require.JSONEq(t, expectedBody, response.Body.String())
+		require.Equal(t, expectedHeaders, response.Header())
+		require.Equal(t, expectedCallHunt, ht.Calls.Hunt)
+	})
+
+	t.Run("case 3: fail to hunt - internal server error", func(t *testing.T) {
+		// arrange
+		// - hunter: mock
+		ht := hunter.NewHunterMock()
+		ht.HuntFunc = func(pr prey.Prey) (duration float64, err error) {
+			return 0.0, errors.New("internal server error")
+		}
+		// - handler
+		hd := handler.NewHunter(ht, nil)
+
+		// act
+		request := httptest.NewRequest("POST", "/", nil)
+		response := httptest.NewRecorder()
+		hd.Hunt()(response, request)
+
+		// assert
+		expectedCode := http.StatusInternalServerError
+		expectedBody := fmt.Sprintf(
+			`{"status":"%s","message":"%s"}`,
+			http.StatusText(expectedCode),
+			"internal server error",
+		)
+		expectedHeaders := http.Header{"Content-Type": []string{"application/json"}}
+		expectedCallHunt := 1
+		require.Equal(t, expectedCode, response.Code)
+		require.JSONEq(t, expectedBody, response.Body.String())
+		require.Equal(t, expectedHeaders, response.Header())
+		require.Equal(t, expectedCallHunt, ht.Calls.Hunt)
+	})
 }

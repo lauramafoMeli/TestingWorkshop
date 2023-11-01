@@ -91,7 +91,7 @@ func (h *Hunter) Hunt() http.HandlerFunc {
 
 		// process
 		// - hunt
-		err := h.ht.Hunt(h.pr)
+		duration, err := h.ht.Hunt(h.pr)
 		if err != nil {
 			switch {
 			case errors.Is(err, hunter.ErrCanNotHunt):
@@ -105,7 +105,9 @@ func (h *Hunter) Hunt() http.HandlerFunc {
 		// response
 		response.JSON(w, http.StatusOK, map[string]any{
 			"message": "prey hunted",
-			"data": nil,
+			"data": map[string]any{
+				"duration": duration,
+			},
 		})
 	}
 }

@@ -15,5 +15,6 @@ type CatchSimulator interface {
 	// CanCatch returns true if the hunter can catch the prey
 	// - hunter: is the hunter subject
 	// - prey: is the prey subject
-	CanCatch(hunter, prey *Subject) (canCatch bool)
+	// - duration: is the duration of the catch (in seconds)
+	CanCatch(hunter, prey *Subject) (duration float64, ok bool)
 }

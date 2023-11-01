@@ -61,7 +61,7 @@ type WhiteShark struct {
 }
 
 // Hunt hunts the prey
-func (w *WhiteShark) Hunt(prey prey.Prey) (err error) {
+func (w *WhiteShark) Hunt(prey prey.Prey) (duration float64, err error) {
 	// get the position of the prey
 	preySubject := &simulator.Subject{
 		Position: prey.GetPosition(),
@@ -75,7 +75,8 @@ func (w *WhiteShark) Hunt(prey prey.Prey) (err error) {
 	}
 	
 	// check if shark can catch the prey
-	if !w.simulator.CanCatch(sharkSubject, preySubject) {
+	duration, ok := w.simulator.CanCatch(sharkSubject, preySubject)
+	if !ok {
 		err = fmt.Errorf("%w: shark can not catch the prey", ErrCanNotHunt)
 		return
 	}
