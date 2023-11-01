@@ -1,13 +1,10 @@
 package handler
 
 import (
-	"errors"
 	"net/http"
 	"testdoubles/internal/hunter"
 	"testdoubles/internal/positioner"
 	"testdoubles/internal/prey"
-	"testdoubles/platform/web/request"
-	"testdoubles/platform/web/response"
 )
 
 // NewHunter returns a new Hunter handler.
@@ -33,23 +30,10 @@ type RequestBodyConfigPrey struct {
 func (h *Hunter) ConfigurePrey() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// request
-		// - body
-		var body RequestBodyConfigPrey
-		err := request.JSON(r, &body)
-		if err != nil {
-			response.Error(w, http.StatusBadRequest, "invalid request body")
-			return
-		}
 
 		// process
-		// - configure prey
-		h.pr.Configure(body.Speed, body.Position)
 
 		// response
-		response.JSON(w, http.StatusOK, map[string]any{
-			"message": "prey configured",
-			"data": nil,
-		})
 	}
 }
 
@@ -63,23 +47,10 @@ type RequestBodyConfigHunter struct {
 func (h *Hunter) ConfigureHunter() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// request
-		// - body
-		var body RequestBodyConfigHunter
-		err := request.JSON(r, &body)
-		if err != nil {
-			response.Error(w, http.StatusBadRequest, "invalid request body")
-			return
-		}
 
 		// process
-		// - configure hunter
-		h.ht.Configure(body.Speed, body.Position)
 
 		// response
-		response.JSON(w, http.StatusOK, map[string]any{
-			"message": "hunter configured",
-			"data": nil,
-		})
 	}
 }
 
@@ -87,26 +58,9 @@ func (h *Hunter) ConfigureHunter() http.HandlerFunc {
 func (h *Hunter) Hunt() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// request
-		// ...
 
 		// process
-		// - hunt
-		duration, err := h.ht.Hunt(h.pr)
-		if err != nil {
-			if !errors.Is(err, hunter.ErrCanNotHunt) {
-				response.Error(w, http.StatusInternalServerError, "internal server error")
-				return
-			}
-		}
-		ok := err == nil
 
 		// response
-		response.JSON(w, http.StatusOK, map[string]any{
-			"message": "hunt done",
-			"data": map[string]any{
-				"success": ok,
-				"duration": duration,
-			},
-		})
 	}
 }
