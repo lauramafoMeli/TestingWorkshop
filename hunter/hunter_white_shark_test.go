@@ -1,6 +1,7 @@
-package hunter
+package hunter_test
 
 import (
+	"testdoubles/hunter"
 	"testdoubles/positioner"
 	"testdoubles/prey"
 	"testdoubles/simulator"
@@ -26,11 +27,7 @@ func TestHunterWhiteShark_Hunt(t *testing.T) {
 			return true
 		}
 
-		impl := &WhiteShark{
-			speed:     100,
-			position:  &positioner.Position{X: 1, Y: 1, Z: 1},
-			simulator: sm,
-		}
+		impl := hunter.NewWhiteShark(100, &positioner.Position{X: 1, Y: 1, Z: 1}, sm)
 
 		// act
 		err := impl.Hunt(pr)
@@ -57,17 +54,13 @@ func TestHunterWhiteShark_Hunt(t *testing.T) {
 			return false
 		}
 
-		impl := &WhiteShark{
-			speed:     1,
-			position:  &positioner.Position{X: 1, Y: 1, Z: 1},
-			simulator: sm,
-		}
+		impl := hunter.NewWhiteShark(1, &positioner.Position{X: 1, Y: 1, Z: 1}, sm)
 
 		// act
 		err := impl.Hunt(pr)
 
 		// assert
-		expErr := ErrCanNotHunt; expErrMsg := "can not hunt the prey: shark can not catch the prey"
+		expErr := hunter.ErrCanNotHunt; expErrMsg := "can not hunt the prey: shark can not catch the prey"
 		expMockCallCanCatch := 1
 		require.ErrorIs(t, err, expErr)
 		require.EqualError(t, err, expErrMsg)
@@ -89,17 +82,13 @@ func TestHunterWhiteShark_Hunt(t *testing.T) {
 			return false
 		}
 
-		impl := &WhiteShark{
-			speed:     100,
-			position:  &positioner.Position{X: 1000, Y: 1000, Z: 1000},
-			simulator: sm,
-		}
+		impl := hunter.NewWhiteShark(100, &positioner.Position{X: 1000, Y: 1000, Z: 1000}, sm)
 
 		// act
 		err := impl.Hunt(pr)
 
 		// assert
-		expErr := ErrCanNotHunt; expErrMsg := "can not hunt the prey: shark can not catch the prey"
+		expErr := hunter.ErrCanNotHunt; expErrMsg := "can not hunt the prey: shark can not catch the prey"
 		expMockCallCanCatch := 1
 		require.ErrorIs(t, err, expErr)
 		require.EqualError(t, err, expErrMsg)

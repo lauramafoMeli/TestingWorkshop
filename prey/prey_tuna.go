@@ -23,6 +23,14 @@ func CreateTuna() Prey {
 	}
 }
 
+// NewTuna creates a new Tuna
+func NewTuna(speed float64, position *positioner.Position) Prey {
+	return &Tuna{
+		speed: speed,
+		position: position,
+	}
+}
+
 // Tuna is an implementation of the Prey interface
 type Tuna struct {
 	// speed of the tuna

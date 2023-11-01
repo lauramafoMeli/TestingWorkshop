@@ -1,7 +1,8 @@
-package prey
+package prey_test
 
 import (
 	"testdoubles/positioner"
+	"testdoubles/prey"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -9,9 +10,9 @@ import (
 
 // Unit Tests for Tuna implementation of Prey interface
 func TestTuna_GetSpeed(t *testing.T) {
-	t.Run("speed is 0", func(t *testing.T) {
+	t.Run("speed is 0.0", func(t *testing.T) {
 		// arrange
-		impl := &Tuna{speed: 0.0, position: nil}
+		impl := prey.NewTuna(0.0, nil)
 
 		// act
 		output := impl.GetSpeed()
@@ -21,9 +22,9 @@ func TestTuna_GetSpeed(t *testing.T) {
 		require.Equal(t, outputSpeed, output)
 	})
 	
-	t.Run("speed is greater than 0", func(t *testing.T) {
+	t.Run("speed is greater than 0.0", func(t *testing.T) {
 		// arrange
-		impl := &Tuna{speed: 252.0, position: nil}
+		impl := prey.NewTuna(252.0, nil)
 
 		// act
 		output := impl.GetSpeed()
@@ -37,7 +38,7 @@ func TestTuna_GetSpeed(t *testing.T) {
 func TestTuna_GetPosition(t *testing.T) {
 	t.Run("position is nil", func(t *testing.T) {
 		// arrange
-		impl := &Tuna{speed: 0, position: nil}
+		impl := prey.NewTuna(0.0, nil)
 
 		// act
 		output := impl.GetPosition()
@@ -48,7 +49,7 @@ func TestTuna_GetPosition(t *testing.T) {
 	
 	t.Run("position is not nil", func(t *testing.T) {
 		// arrange
-		impl := &Tuna{speed: 0, position: &positioner.Position{X: 0, Y: 0, Z: 0}}
+		impl := prey.NewTuna(0.0, &positioner.Position{X: 0, Y: 0, Z: 0})
 
 		// act
 		output := impl.GetPosition()
